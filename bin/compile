@@ -195,6 +195,8 @@ mkdir -p $build_dir/.heroku/php
 export COMPOSER_HOME=$cache_dir/.composer
 mkdir -p $COMPOSER_HOME
 
+
+
 # if the build dir is not "/app", we symlink in the .heroku/php subdir (and only that, to avoid problems with other buildpacks) so that PHP correctly finds its INI files etc
 [[ $build_dir == '/app' ]] || ln -s $build_dir/.heroku/php /app/.heroku/php
 
@@ -308,6 +310,10 @@ composer validate --no-plugins --no-check-publish --no-check-all --quiet "$COMPO
 		https://getcomposer.org/doc/01-basic-usage.md
 	EOF
 }
+
+# For SQLSRV
+wget https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+wget https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
 # if prefer-stable is false and minimum-stability is not stable, warn about potential unstable platform installs
 [[ ! -f "$COMPOSER_LOCK" ]] || minimum_stability=$(cat "$COMPOSER_LOCK" | python -c 'import sys, json; l = json.load(sys.stdin); print(l.get("minimum-stability")); sys.exit(l.get("minimum-stability", "stable") != "stable" and l.get("prefer-stable", False) == False);' 2> /dev/null) || {
