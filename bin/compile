@@ -739,6 +739,9 @@ cd $build_dir/$composer_bindir
 ln -fs $relbins .
 cd $build_dir
 
+# Add sqlsrv
+source $bp_dir/bin/sqlsrv
+
 if [[ ! -f "Procfile" ]]; then
 	echo "web: heroku-$engine-apache2" > Procfile
 	notice_inline "No Procfile, using 'web: heroku-$engine-apache2'."
@@ -761,7 +764,6 @@ if [[ "${HEROKU_PHP_INSTALL_DEV+CI}" != "CI" ]]; then
 	install_newrelic_userini
 fi
 
-source $BP_DIR/bin/sqlsrv
 
 
 # done with platform installs; restore COMPOSER from previous value
